@@ -6,6 +6,7 @@ import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
+	onAuthStateChanged,
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -19,8 +20,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 /* === UI === */
 
-/* == UI - Elements == */
-
+// ELEMENTS
 const viewLoggedOut = document.getElementById("logged-out-view");
 const viewLoggedIn = document.getElementById("logged-in-view");
 
@@ -36,17 +36,23 @@ const signInButton = document.getElementById("sign-in-btn");
 const createAccountButton = document.getElementById("create-account-btn");
 
 const signOutButton = document.getElementById("sign-out-btn");
-/* == UI - Event Listeners == */
 
+// EVENT LISTENERS
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
 signInButton.addEventListener("click", authSignInWithEmail);
 createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 signOutButton.addEventListener("click", authSignOut);
-/* === Main Code === */
 
-showLoggedOutView();
+// CHECKS IF USER IS LOGGED IN OR LOGGED OUT
+onAuthStateChanged(auth, (user) => {
+	if (user) {
+		showLoggedInView();
+	} else {
+		showLoggedOutView();
+	}
+});
 
 // SIGN IN WITH GOOGLE
 function authSignInWithGoogle() {
@@ -61,7 +67,6 @@ function authSignInWithEmail() {
 	signInWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
 			clearAuthFields();
-			showLoggedInView();
 		})
 		.catch((error) => {
 			console.error(error.message);
@@ -76,7 +81,6 @@ function authCreateAccountWithEmail() {
 	createUserWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
 			clearAuthFields();
-			showLoggedInView();
 		})
 		.catch((error) => {
 			console.error(error.message);
@@ -86,9 +90,7 @@ function authCreateAccountWithEmail() {
 // SIGN OUT
 function authSignOut() {
 	signOut(auth)
-		.then(() => {
-			showLoggedOutView();
-		})
+		.then(() => {})
 		.catch((error) => {
 			console.error(error.message);
 		});
