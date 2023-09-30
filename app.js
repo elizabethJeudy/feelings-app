@@ -5,6 +5,7 @@ import {
 	sendEmailVerification,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	signOut,
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -34,6 +35,7 @@ const passwordInput = document.getElementById("password-input");
 const signInButton = document.getElementById("sign-in-btn");
 const createAccountButton = document.getElementById("create-account-btn");
 
+const signOutButton = document.getElementById("sign-out-btn");
 /* == UI - Event Listeners == */
 
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
@@ -41,6 +43,7 @@ signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 signInButton.addEventListener("click", authSignInWithEmail);
 createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
+signOutButton.addEventListener("click", authSignOut);
 /* === Main Code === */
 
 showLoggedOutView();
@@ -72,6 +75,17 @@ function authCreateAccountWithEmail() {
 	createUserWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
 			showLoggedInView();
+		})
+		.catch((error) => {
+			console.error(error.message);
+		});
+}
+
+// SIGN OUT
+function authSignOut() {
+	signOut(auth)
+		.then(() => {
+			showLoggedOutView();
 		})
 		.catch((error) => {
 			console.error(error.message);
