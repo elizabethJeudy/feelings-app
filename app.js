@@ -4,6 +4,7 @@ import {
 	getAuth,
 	sendEmailVerification,
 	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -44,18 +45,26 @@ createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 showLoggedOutView();
 
-/* === Functions === */
-
-/* = Functions - Firebase - Authentication = */
-
+// SIGN IN WITH GOOGLE
 function authSignInWithGoogle() {
 	console.log("Sign in with Google");
 }
 
+// SIGN IN WITH EMAIL
 function authSignInWithEmail() {
-	console.log("Sign in with email and password");
+	const email = emailInput.value;
+	const password = passwordInput.value;
+
+	signInWithEmailAndPassword(auth, email, password)
+		.then((userCredential) => {
+			showLoggedInView();
+		})
+		.catch((error) => {
+			console.error(error.message);
+		});
 }
 
+// CREATE ACCOUNT WITH EMAIL
 function authCreateAccountWithEmail() {
 	const email = emailInput.value;
 	const password = passwordInput.value;
@@ -69,13 +78,12 @@ function authCreateAccountWithEmail() {
 		});
 }
 
-/* == Functions - UI Functions == */
-
 function showLoggedOutView() {
 	hideElement(viewLoggedIn);
 	showElement(viewLoggedOut);
 }
 
+// RENDERS HOME PAGE
 function showLoggedInView() {
 	hideElement(viewLoggedOut);
 	showElement(viewLoggedIn);
