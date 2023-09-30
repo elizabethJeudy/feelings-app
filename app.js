@@ -7,6 +7,8 @@ import {
 	signInWithEmailAndPassword,
 	signOut,
 	onAuthStateChanged,
+	GoogleAuthProvider,
+	signInWithPopup,
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -18,6 +20,8 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
 /* === UI === */
 
 // ELEMENTS
@@ -56,9 +60,14 @@ onAuthStateChanged(auth, (user) => {
 
 // SIGN IN WITH GOOGLE
 function authSignInWithGoogle() {
-	console.log("Sign in with Google");
+	signInWithPopup(auth, provider)
+		.then((result) => {
+			console.log("Successfully sign in with Google");
+		})
+		.catch((error) => {
+			console.error(error.message);
+		});
 }
-
 // SIGN IN WITH EMAIL
 function authSignInWithEmail() {
 	const email = emailInput.value;
