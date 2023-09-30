@@ -1,5 +1,10 @@
 /* FIREBASE  */
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import {
+	getAuth,
+	sendEmailVerification,
+	createUserWithEmailAndPassword,
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
 	authDomain: "feelings-eb0c3.firebaseapp.com",
@@ -9,7 +14,7 @@ const firebaseConfig = {
 	appId: "1:791006282814:web:6753435b514bde2db23d6f",
 };
 const app = initializeApp(firebaseConfig);
-
+const auth = getAuth(app);
 /* === UI === */
 
 /* == UI - Elements == */
@@ -17,22 +22,23 @@ const app = initializeApp(firebaseConfig);
 const viewLoggedOut = document.getElementById("logged-out-view");
 const viewLoggedIn = document.getElementById("logged-in-view");
 
-const signInWithGoogleButtonEl = document.getElementById(
+const signInWithGoogleButton = document.getElementById(
 	"sign-in-with-google-btn"
 );
 
-const emailInputEl = document.getElementById("email-input");
-const passwordInputEl = document.getElementById("password-input");
+// const nameInput = document.getElementById("name-input");
+const emailInput = document.getElementById("email-input");
+const passwordInput = document.getElementById("password-input");
 
-const signInButtonEl = document.getElementById("sign-in-btn");
-const createAccountButtonEl = document.getElementById("create-account-btn");
+const signInButton = document.getElementById("sign-in-btn");
+const createAccountButton = document.getElementById("create-account-btn");
 
 /* == UI - Event Listeners == */
 
-signInWithGoogleButtonEl.addEventListener("click", authSignInWithGoogle);
+signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
-signInButtonEl.addEventListener("click", authSignInWithEmail);
-createAccountButtonEl.addEventListener("click", authCreateAccountWithEmail);
+signInButton.addEventListener("click", authSignInWithEmail);
+createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 /* === Main Code === */
 
@@ -51,7 +57,16 @@ function authSignInWithEmail() {
 }
 
 function authCreateAccountWithEmail() {
-	console.log("Sign up with email and password");
+	const email = emailInput.value;
+	const password = passwordInput.value;
+
+	createUserWithEmailAndPassword(auth, email, password)
+		.then((userCredential) => {
+			showLoggedInView();
+		})
+		.catch((error) => {
+			console.error(error.message);
+		});
 }
 
 /* == Functions - UI Functions == */
@@ -73,3 +88,28 @@ function showElement(element) {
 function hideElement(element) {
 	element.style.display = "none";
 }
+
+/**async function sendEmailVerification(user) {
+	try {
+		await sendEmailVerification(user);
+		console.log("Email verification sent!");
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+async function authCreateAccountWithEmail() {
+	const name = nameInput.value;
+	const email = emailInput.value;
+	const password = passwordInput.value;
+
+	createUserWithEmailAndPassword(auth, name, email, password)
+		.then(async (userCredential) => {
+			await sendEmailVerification(auth.currentUser);
+
+			showLoggedInView();
+		})
+		.catch((error) => {
+			console.error(error.message);
+		});
+} */
