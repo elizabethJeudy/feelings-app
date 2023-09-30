@@ -60,6 +60,7 @@ function authSignInWithEmail() {
 
 	signInWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
+			clearAuthFields();
 			showLoggedInView();
 		})
 		.catch((error) => {
@@ -74,6 +75,7 @@ function authCreateAccountWithEmail() {
 
 	createUserWithEmailAndPassword(auth, email, password)
 		.then((userCredential) => {
+			clearAuthFields();
 			showLoggedInView();
 		})
 		.catch((error) => {
@@ -93,22 +95,33 @@ function authSignOut() {
 }
 
 function showLoggedOutView() {
-	hideElement(viewLoggedIn);
-	showElement(viewLoggedOut);
+	hideView(viewLoggedIn);
+	showView(viewLoggedOut);
 }
 
 // RENDERS HOME PAGE
 function showLoggedInView() {
-	hideElement(viewLoggedOut);
-	showElement(viewLoggedIn);
+	hideView(viewLoggedOut);
+	showView(viewLoggedIn);
 }
 
-function showElement(element) {
-	element.style.display = "flex";
+function showView(view) {
+	view.style.display = "flex";
 }
 
-function hideElement(element) {
-	element.style.display = "none";
+function hideView(view) {
+	view.style.display = "none";
+}
+
+// CLEARS INPUT/AUTH FIELDS
+
+function clearInputField(field) {
+	field.value = "";
+}
+
+function clearAuthFields() {
+	clearInputField(emailInput);
+	clearInputField(passwordInput);
 }
 
 /**async function sendEmailVerification(user) {
