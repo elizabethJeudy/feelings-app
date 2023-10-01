@@ -41,6 +41,8 @@ const createAccountButton = document.getElementById("create-account-btn");
 
 const signOutButton = document.getElementById("sign-out-btn");
 
+const userProfilePicture = document.getElementById("user-profile-picture");
+
 // EVENT LISTENERS
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
@@ -53,6 +55,7 @@ signOutButton.addEventListener("click", authSignOut);
 onAuthStateChanged(auth, (user) => {
 	if (user) {
 		showLoggedInView();
+		showProfilePic(userProfilePicture, user);
 	} else {
 		showLoggedOutView();
 	}
@@ -133,6 +136,16 @@ function clearInputField(field) {
 function clearAuthFields() {
 	clearInputField(emailInput);
 	clearInputField(passwordInput);
+}
+
+// SHOWS USER PIC
+function showProfilePic(imgElement, user) {
+	const photoURL = user.photoURL;
+	if (photoURL) {
+		imgElement.src = photoURL;
+	} else {
+		imgElement.src = "assets/defaultProfilePic.jpeg";
+	}
 }
 
 /**async function sendEmailVerification(user) {
