@@ -37,9 +37,15 @@ body {
 }
 
 
-h1 {
+h1,
+h2 {
   margin: 0;
 }
+
+h2 {
+  font-weight: 500;
+}
+
 
 .app-title {
   font-family: var(--secondary-font);
@@ -60,11 +66,26 @@ section {
 }
 
 nav {
-  margin: .6em 0;
-  width: 100%;
   display: flex;
   justify-content: flex-end;
+  margin: 0.6em 0;
+  width: 100%;
 }
+
+.sign-out-btn {
+  display: flex;
+  justify-content: flex-end;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 1.875;
+}
+
+.sign-out-btn:hover {
+  filter: invert(0.5);
+}
+
 
 /* user section */
 
@@ -80,6 +101,10 @@ nav {
   height: 3.75em;
   border-radius: 100%;
   border: var(--border-width) solid var(--dark-color)
+}
+
+.user-section h2 {
+  font-size: 1.2em;
 }
 
 
@@ -191,17 +216,7 @@ button:hover {
   width: 1.375em;
 }
 
-.sign-out-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  width: 1.875;
-}
 
-.sign-out-btn:hover {
-  filter: invert(0.5);
-}
 
 /* === IDs === */
 

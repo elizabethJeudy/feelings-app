@@ -43,6 +43,8 @@ const signOutButton = document.getElementById("sign-out-btn");
 
 const userProfilePicture = document.getElementById("user-profile-picture");
 
+const userGreeting = document.getElementById("user-greeting");
+
 // EVENT LISTENERS
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
@@ -56,6 +58,7 @@ onAuthStateChanged(auth, (user) => {
 	if (user) {
 		showLoggedInView();
 		showProfilePic(userProfilePicture, user);
+		showUserGreeting(userGreeting, user);
 	} else {
 		showLoggedOutView();
 	}
@@ -145,6 +148,18 @@ function showProfilePic(imgElement, user) {
 		imgElement.src = photoURL;
 	} else {
 		imgElement.src = "assets/defaultProfilePic.jpeg";
+	}
+}
+
+// GREETS USER
+function showUserGreeting(element, user) {
+	const displayName = user.displayName;
+
+	if (displayName) {
+		const userFirstName = displayName.split(" ")[0]; // takes first name
+		element.textContent = `Hey ${userFirstName}, how are you?`;
+	} else {
+		element.textContent = "Hey friend, how are you?";
 	}
 }
 
