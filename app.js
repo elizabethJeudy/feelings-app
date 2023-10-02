@@ -9,6 +9,7 @@ import {
 	onAuthStateChanged,
 	GoogleAuthProvider,
 	signInWithPopup,
+	updateProfile,
 } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -45,6 +46,11 @@ const userProfilePicture = document.getElementById("user-profile-picture");
 
 const userGreeting = document.getElementById("user-greeting");
 
+const displayNameInput = document.getElementById("display-name-input");
+const photoURLInput = document.getElementById("photo-url-input");
+// const photoFileInput = document.getElementById("profile-pic-file");
+const updateProfileButton = document.getElementById("update-profile-btn");
+
 // EVENT LISTENERS
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
@@ -52,6 +58,8 @@ signInButton.addEventListener("click", authSignInWithEmail);
 createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 signOutButton.addEventListener("click", authSignOut);
+
+updateProfileButton.addEventListener("click", authUpdateProfile);
 
 // CHECKS IF USER IS LOGGED IN OR LOGGED OUT
 onAuthStateChanged(auth, (user) => {
@@ -106,6 +114,24 @@ function authCreateAccountWithEmail() {
 function authSignOut() {
 	signOut(auth)
 		.then(() => {})
+		.catch((error) => {
+			console.error(error.message);
+		});
+}
+
+// ALLOW USERS TO CHANGE DEFAULT SETTINGS (DISPLAY NAME & PIC)
+function authUpdateProfile() {
+	const newDisplayName = displayNameInput.value;
+	const newPhotoURL = photoURLInput.value;
+	// const newPhotoFile = photoFileInput.value;
+
+	updateProfile(auth.currentUser, {
+		displayName: newDisplayName,
+		photoURL: newPhotoURL,
+	})
+		.then(() => {
+			console.log("profile updated woot woot");
+		})
 		.catch((error) => {
 			console.error(error.message);
 		});
