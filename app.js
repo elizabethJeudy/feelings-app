@@ -1,8 +1,8 @@
 /* FIREBASE  */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+
 import {
 	getAuth,
-	sendEmailVerification,
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	signOut,
@@ -10,7 +10,10 @@ import {
 	GoogleAuthProvider,
 	signInWithPopup,
 	updateProfile,
-} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
 	authDomain: "feelings-eb0c3.firebaseapp.com",
@@ -19,10 +22,13 @@ const firebaseConfig = {
 	messagingSenderId: "791006282814",
 	appId: "1:791006282814:web:6753435b514bde2db23d6f",
 };
+
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+console.log(db);
 /* === UI === */
 
 // ELEMENTS
