@@ -16,6 +16,7 @@ import {
 	getFirestore,
 	collection,
 	addDoc,
+	serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -60,6 +61,8 @@ const photoURLInput = document.getElementById("photo-url-input");
 // const photoFileInput = document.getElementById("profile-pic-file");
 // const updateProfileButton = document.getElementById("update-profile-btn");
 
+const moodIcons = document.getElementsByClassName("mood-icon-btn");
+
 const textarea = document.getElementById("post-input");
 const postButton = document.getElementById("post-btn");
 
@@ -71,9 +74,16 @@ createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 signOutButton.addEventListener("click", authSignOut);
 
+// iterate through elements, running selected mood for each
+for (let moodIcon of moodIcons) {
+	moodIcon.addEventListener("click", selectMood);
+}
+
 postButton.addEventListener("click", postButtonClicked);
 
 // updateProfileButton.addEventListener("click", authUpdateProfile);
+
+let moodState = 0;
 
 // CHECKS IF USER IS LOGGED IN OR LOGGED OUT
 onAuthStateChanged(auth, (user) => {
@@ -152,11 +162,13 @@ function authUpdateProfile() {
 }
 
 // ADDS USER POST TO DATABASE
-
-async function addPostToDB(postBody) {
+async function addPostToDB(postBody, user) {
 	try {
 		const docRef = await addDoc(collection(db, "posts"), {
-			body: postBody,
+			body: postBody, // adds post to collection
+			uid: user.uid, // grabs specific user uid
+			createdAt: serverTimestamp(),
+			mood: moodState,
 		});
 		console.log("Document written with ID: ", docRef.id);
 	} catch (error) {
@@ -166,9 +178,12 @@ async function addPostToDB(postBody) {
 
 function postButtonClicked() {
 	const postBody = textarea.value;
-	if (postBody) {
-		addPostToDB(postBody);
+	const user = auth.currentUser;
+
+	if (postBody && moodState) {
+		addPostToDB(postBody, user);
 		clearInputField(textarea);
+		resetAllMoods(moodIcons);
 	}
 }
 
@@ -224,27 +239,37 @@ function showUserGreeting(element, user) {
 	}
 }
 
-/**async function sendEmailVerification(user) {
-	try {
-		await sendEmailVerification(user);
-		console.log("Email verification sent!");
-	} catch (error) {
-		console.error(error);
+// MOOD SELECTION
+function selectMood(event) {
+	const selectedMoodEmojiID = event.currentTarget.id;
+
+	moodChangeAfterSelection(selectedMoodEmojiID, moodIcons);
+	const chosenMood = returnMoodValue(selectedMoodEmojiID);
+
+	moodState = chosenMood;
+}
+
+function moodChangeAfterSelection(selectedMoodEmojiID, allMoods) {
+	for (let moodIcon of moodIcons) {
+		if (selectedMoodEmojiID === moodIcon.id) {
+			moodIcon.classList.remove("unselected-icon");
+			moodIcon.classList.add("selected-icon");
+		} else {
+			moodIcon.classList.remove("selected-icon");
+			moodIcon.classList.add("unselected-icon");
+		}
 	}
 }
 
-async function authCreateAccountWithEmail() {
-	const name = nameInput.value;
-	const email = emailInput.value;
-	const password = passwordInput.value;
+function resetAllMoods(allMoods) {
+	for (let moodIcon of allMoods) {
+		moodIcon.classList.remove("selected-icon");
+		moodIcon.classList.add("unselected-icon");
+	}
 
-	createUserWithEmailAndPassword(auth, name, email, password)
-		.then(async (userCredential) => {
-			await sendEmailVerification(auth.currentUser);
+	moodState = 0;
+}
 
-			showLoggedInView();
-		})
-		.catch((error) => {
-			console.error(error.message);
-		});
-} */
+function returnMoodValue(elementID) {
+	return Number(elementID.slice(5));
+}
