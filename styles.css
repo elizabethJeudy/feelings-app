@@ -113,6 +113,38 @@ nav {
   gap: 1em;
 }
 
+.mood-icons {
+  display: flex;
+}
+
+.mood-icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.8em;
+  gap: 0.3em;
+  background-color: transparent;
+  border: 0;
+}
+
+.mood-icon-btn:hover {
+  transform: scale(1.2);
+}
+
+.mood-icon-btn img {
+  width: 3.1em;
+  height: 3.1em;
+}
+
+.selected-icon {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.unselected-icon {
+  transform: scale(1);
+  opacity: 0.5;
+}
 
 /* === Structure === */
 
@@ -184,9 +216,8 @@ input::-ms-input-placeholder {
 textarea {
   font-size: 1em;
   border: 0;
-  box-shadow: 3px 2px 2px 1px rgba(0, 0, .25);
   resize: none;
-  height: 6em;
+  height: 10em;
 }
 
 textarea::placeholder {
