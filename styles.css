@@ -107,6 +107,12 @@ nav {
   font-size: 1.2em;
 }
 
+.post-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 
 /* === Structure === */
 
@@ -121,29 +127,34 @@ nav {
 .app-container {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 2em;
 }
 
 #logged-out-view .container {
   gap: 2em;
 }
 
-
-
 input,
 button {
-  font-family: inherit;
-  padding: var(--element-padding);
-  border-radius: var(--element-border-radius);
-  width: 100%;
-  box-sizing: border-box;
   font-size: 1.1em;
   text-align: center;
   border: var(--border-width) solid var(--dark-color);
 }
 
+input,
+button,
+textarea {
+  font-family: inherit;
+  padding: var(--element-padding);
+  border-radius: var(--element-border-radius);
+  width: 100%;
+  box-sizing: border-box;
+
+}
+
 input:focus,
-button:focus {
+button:focus,
+textarea:focus {
   outline: none;
 }
 
@@ -166,6 +177,31 @@ input:-ms-input-placeholder {
 }
 
 input::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: var(--grey-color);
+}
+
+textarea {
+  font-size: 1em;
+  border: 0;
+  box-shadow: 3px 2px 2px 1px rgba(0, 0, .25);
+  resize: none;
+  height: 6em;
+}
+
+textarea::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--grey-color);
+  opacity: 1;
+  /* Firefox */
+}
+
+textarea:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: var(--grey-color);
+}
+
+textarea::-ms-input-placeholder {
   /* Microsoft Edge */
   color: var(--grey-color);
 }

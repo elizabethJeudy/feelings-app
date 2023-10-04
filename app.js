@@ -12,7 +12,11 @@ import {
 	updateProfile,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
-import { getFirestore } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+import {
+	getFirestore,
+	collection,
+	addDoc,
+} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -28,7 +32,6 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-console.log(db);
 /* === UI === */
 
 // ELEMENTS
@@ -55,7 +58,10 @@ const userGreeting = document.getElementById("user-greeting");
 const displayNameInput = document.getElementById("display-name-input");
 const photoURLInput = document.getElementById("photo-url-input");
 // const photoFileInput = document.getElementById("profile-pic-file");
-const updateProfileButton = document.getElementById("update-profile-btn");
+// const updateProfileButton = document.getElementById("update-profile-btn");
+
+const textarea = document.getElementById("post-input");
+const postButton = document.getElementById("post-btn");
 
 // EVENT LISTENERS
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
@@ -65,7 +71,9 @@ createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 signOutButton.addEventListener("click", authSignOut);
 
-updateProfileButton.addEventListener("click", authUpdateProfile);
+postButton.addEventListener("click", postButtonClicked);
+
+// updateProfileButton.addEventListener("click", authUpdateProfile);
 
 // CHECKS IF USER IS LOGGED IN OR LOGGED OUT
 onAuthStateChanged(auth, (user) => {
@@ -141,6 +149,27 @@ function authUpdateProfile() {
 		.catch((error) => {
 			console.error(error.message);
 		});
+}
+
+// ADDS USER POST TO DATABASE
+
+async function addPostToDB(postBody) {
+	try {
+		const docRef = await addDoc(collection(db, "posts"), {
+			body: postBody,
+		});
+		console.log("Document written with ID: ", docRef.id);
+	} catch (error) {
+		console.error(error.message);
+	}
+}
+
+function postButtonClicked() {
+	const postBody = textarea.value;
+	if (postBody) {
+		addPostToDB(postBody);
+		clearInputField(textarea);
+	}
 }
 
 function showLoggedOutView() {
