@@ -339,5 +339,5 @@ function resetAllMoods(allMoods) {
 }
 
 function returnMoodValue(elementID) {
-	return Number(elementID.slice(5));
+	return Number(elementID.slice(6));
 }
