@@ -15,6 +15,7 @@ import {
 import {
 	getFirestore,
 	collection,
+	getDocs,
 	addDoc,
 	serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
@@ -32,8 +33,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-
-/* === UI === */
 
 // ELEMENTS
 const viewLoggedOut = document.getElementById("logged-out-view");
@@ -66,13 +65,18 @@ const moodIcons = document.getElementsByClassName("mood-icon-btn");
 const textarea = document.getElementById("post-input");
 const postButton = document.getElementById("post-btn");
 
-// EVENT LISTENERS
+const fetchPosts = document.getElementById("fetch-posts-btn");
+const posts = document.getElementById("posts");
+
+// event listeners
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
 signInButton.addEventListener("click", authSignInWithEmail);
 createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 signOutButton.addEventListener("click", authSignOut);
+
+fetchPosts.addEventListener("click", fetchAndRenderPosts);
 
 // iterate through elements, running selected mood for each
 for (let moodIcon of moodIcons) {
@@ -85,7 +89,7 @@ postButton.addEventListener("click", postButtonClicked);
 
 let moodState = 0;
 
-// CHECKS IF USER IS LOGGED IN OR LOGGED OUT
+//  checks if user is logged in/logged out
 onAuthStateChanged(auth, (user) => {
 	if (user) {
 		showLoggedInView();
@@ -96,7 +100,9 @@ onAuthStateChanged(auth, (user) => {
 	}
 });
 
-// SIGN IN WITH GOOGLE
+// FIREBASE, AUTHENTICATION FUNCTIONS
+
+// sign in with google
 function authSignInWithGoogle() {
 	signInWithPopup(auth, provider)
 		.then((result) => {
@@ -106,7 +112,7 @@ function authSignInWithGoogle() {
 			console.error(error.message);
 		});
 }
-// SIGN IN WITH EMAIL
+// sign in with email
 function authSignInWithEmail() {
 	const email = emailInput.value;
 	const password = passwordInput.value;
@@ -120,7 +126,7 @@ function authSignInWithEmail() {
 		});
 }
 
-// CREATE ACCOUNT WITH EMAIL
+// create account with email
 function authCreateAccountWithEmail() {
 	const email = emailInput.value;
 	const password = passwordInput.value;
@@ -134,7 +140,7 @@ function authCreateAccountWithEmail() {
 		});
 }
 
-// SIGN OUT
+// sign out
 function authSignOut() {
 	signOut(auth)
 		.then(() => {})
@@ -143,7 +149,7 @@ function authSignOut() {
 		});
 }
 
-// ALLOW USERS TO CHANGE DEFAULT SETTINGS (DISPLAY NAME & PIC)
+//  allows user to change default settings (display name/pic)
 function authUpdateProfile() {
 	const newDisplayName = displayNameInput.value;
 	const newPhotoURL = photoURLInput.value;
@@ -161,7 +167,9 @@ function authUpdateProfile() {
 		});
 }
 
-// ADDS USER POST TO DATABASE
+// FIREBASE, CLOUD FIRESTORE FUNCTIONS
+
+// adds user post to database
 async function addPostToDB(postBody, user) {
 	try {
 		const docRef = await addDoc(collection(db, "posts"), {
@@ -176,6 +184,32 @@ async function addPostToDB(postBody, user) {
 	}
 }
 
+// fetches post from database and renders under post
+async function fetchAndRenderPosts() {
+	const querySnapshot = await getDocs(collection(db, "posts"));
+	clearAll(posts);
+	querySnapshot.forEach((doc) => {
+		renderPost(posts, doc.data());
+	});
+}
+
+// UI FUNCTIONS
+
+// renders post
+function renderPost(posts, postData) {
+	posts.innerHTML += `
+	
+						<div class="post">
+							<div class="header">
+								<h3>${displayDate(postData.createdAt)}</h3>
+								<img src="assets/${postData.mood}.png" alt="selected emoji" />
+							</div>
+							<p>${postData.body}</p>
+						</div>
+					
+	`;
+}
+
 function postButtonClicked() {
 	const postBody = textarea.value;
 	const user = auth.currentUser;
@@ -187,12 +221,16 @@ function postButtonClicked() {
 	}
 }
 
+function clearAll(element) {
+	element.innerHTML = "";
+}
+
 function showLoggedOutView() {
 	hideView(viewLoggedIn);
 	showView(viewLoggedOut);
 }
 
-// RENDERS HOME PAGE
+// renders home page
 function showLoggedInView() {
 	hideView(viewLoggedOut);
 	showView(viewLoggedIn);
@@ -206,8 +244,7 @@ function hideView(view) {
 	view.style.display = "none";
 }
 
-// CLEARS INPUT/AUTH FIELDS
-
+// clears input/auth fields
 function clearInputField(field) {
 	field.value = "";
 }
@@ -217,7 +254,7 @@ function clearAuthFields() {
 	clearInputField(passwordInput);
 }
 
-// SHOWS USER PIC
+// displays user pic
 function showProfilePic(imgElement, user) {
 	const photoURL = user.photoURL;
 	if (photoURL) {
@@ -227,7 +264,7 @@ function showProfilePic(imgElement, user) {
 	}
 }
 
-// GREETS USER
+// greets user
 function showUserGreeting(element, user) {
 	const displayName = user.displayName;
 
@@ -239,7 +276,38 @@ function showUserGreeting(element, user) {
 	}
 }
 
-// MOOD SELECTION
+// fetches date
+function displayDate(firebaseDate) {
+	const date = firebaseDate.toDate();
+	const day = date.getDate();
+	const year = date.getFullYear();
+	const months = [
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sept",
+		"Oct",
+		"Nov",
+		"Dec",
+	];
+	const month = months[date.getMonth()];
+
+	let hours = date.getHours();
+	let minutes = date.getMinutes();
+	hours = hours < 10 ? "0" + hours : hours;
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+
+	return `${day} ${month}, ${year} - ${hours}:${minutes} `;
+}
+
+// MOOD FUNCTIONS
+
+// mood selection
 function selectMood(event) {
 	const selectedMoodEmojiID = event.currentTarget.id;
 
