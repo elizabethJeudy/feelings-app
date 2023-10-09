@@ -1,6 +1,5 @@
 /* FIREBASE  */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-
+import { initializeApp } from "firebase/app";
 import {
 	getAuth,
 	createUserWithEmailAndPassword,
@@ -10,15 +9,15 @@ import {
 	GoogleAuthProvider,
 	signInWithPopup,
 	updateProfile,
-} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+} from "firebase/auth";
 
 import {
 	getFirestore,
 	collection,
-	getDocs,
 	addDoc,
 	serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+	getDocs,
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyBqtW-Y__Jo7INCBc06DNsHPMLN1z07rpM",
@@ -34,7 +33,7 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// ELEMENTS
+/* ELEMENTS */
 const viewLoggedOut = document.getElementById("logged-out-view");
 const viewLoggedIn = document.getElementById("logged-in-view");
 
@@ -52,11 +51,10 @@ const createAccountButton = document.getElementById("create-account-btn");
 const signOutButton = document.getElementById("sign-out-btn");
 
 const userProfilePicture = document.getElementById("user-profile-picture");
-
 const userGreeting = document.getElementById("user-greeting");
 
-const displayNameInput = document.getElementById("display-name-input");
-const photoURLInput = document.getElementById("photo-url-input");
+// const displayNameInput = document.getElementById("display-name-input");
+// const photoURLInput = document.getElementById("photo-url-input");
 // const photoFileInput = document.getElementById("profile-pic-file");
 // const updateProfileButton = document.getElementById("update-profile-btn");
 
@@ -68,7 +66,7 @@ const postButton = document.getElementById("post-btn");
 const fetchPosts = document.getElementById("fetch-posts-btn");
 const posts = document.getElementById("posts");
 
-// event listeners
+/* EVENT LISTENERS */
 signInWithGoogleButton.addEventListener("click", authSignInWithGoogle);
 
 signInButton.addEventListener("click", authSignInWithEmail);
@@ -76,15 +74,13 @@ createAccountButton.addEventListener("click", authCreateAccountWithEmail);
 
 signOutButton.addEventListener("click", authSignOut);
 
-fetchPosts.addEventListener("click", fetchAndRenderPosts);
-
 // iterate through elements, running selected mood for each
 for (let moodIcon of moodIcons) {
 	moodIcon.addEventListener("click", selectMood);
 }
 
 postButton.addEventListener("click", postButtonClicked);
-
+fetchPosts.addEventListener("click", fetchAndRenderPosts);
 // updateProfileButton.addEventListener("click", authUpdateProfile);
 
 let moodState = 0;
@@ -100,13 +96,13 @@ onAuthStateChanged(auth, (user) => {
 	}
 });
 
-// FIREBASE, AUTHENTICATION FUNCTIONS
+/* FIREBASE, AUTHENTICATION FUNCTIONS */
 
 // sign in with google
 function authSignInWithGoogle() {
 	signInWithPopup(auth, provider)
 		.then((result) => {
-			console.log("Successfully sign in with Google");
+			console.log("Successfully signed in with Google");
 		})
 		.catch((error) => {
 			console.error(error.message);
@@ -149,6 +145,7 @@ function authSignOut() {
 		});
 }
 
+/*
 //  allows user to change default settings (display name/pic)
 function authUpdateProfile() {
 	const newDisplayName = displayNameInput.value;
@@ -166,8 +163,9 @@ function authUpdateProfile() {
 			console.error(error.message);
 		});
 }
+*/
 
-// FIREBASE, CLOUD FIRESTORE FUNCTIONS
+/* FIREBASE, CLOUD FIRESTORE FUNCTIONS */
 
 // adds user post to database
 async function addPostToDB(postBody, user) {
@@ -187,13 +185,15 @@ async function addPostToDB(postBody, user) {
 // fetches post from database and renders under post
 async function fetchAndRenderPosts() {
 	const querySnapshot = await getDocs(collection(db, "posts"));
+
 	clearAll(posts);
+
 	querySnapshot.forEach((doc) => {
 		renderPost(posts, doc.data());
 	});
 }
 
-// UI FUNCTIONS
+/* UI FUNCTIONS */
 
 // renders post
 function renderPost(posts, postData) {
@@ -305,7 +305,7 @@ function displayDate(firebaseDate) {
 	return `${day} ${month}, ${year} - ${hours}:${minutes} `;
 }
 
-// MOOD FUNCTIONS
+/* MOOD FUNCTIONS */
 
 // mood selection
 function selectMood(event) {
