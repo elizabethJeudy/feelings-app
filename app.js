@@ -1,5 +1,5 @@
 /* FIREBASE  */
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import {
 	getAuth,
 	createUserWithEmailAndPassword,
@@ -9,7 +9,7 @@ import {
 	GoogleAuthProvider,
 	signInWithPopup,
 	updateProfile,
-} from "firebase/auth";
+} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
 import {
 	getFirestore,
@@ -204,10 +204,15 @@ function renderPost(posts, postData) {
 								<h3>${displayDate(postData.createdAt)}</h3>
 								<img src="assets/${postData.mood}.png" alt="selected emoji" />
 							</div>
-							<p>${postData.body}</p>
+							<p>${replaceNewLines(postData.body)}</p>
 						</div>
 					
 	`;
+}
+
+// replaces new line with br tag
+function replaceNewLines(inputString) {
+	return inputString.replace(/\n/g, "<br>");
 }
 
 function postButtonClicked() {
