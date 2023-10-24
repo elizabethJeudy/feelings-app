@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&family=Calistoga&display=swap"
+			rel="stylesheet"
+		/>
+		<script
+			src="https://kit.fontawesome.com/f87113e194.js"
+			crossorigin="anonymous"
+		></script>
+		<link rel="stylesheet" href="styles.css" />
+		<title>feelings.</title>
+	</head>
+	<body>
+		<section id="logged-out-view">
+			<div class="container">
+				<h1 class="app-title">feelings.</h1>
+
+				<div class="provider-buttons">
+					<button id="sign-in-with-google-btn" class="provider-btn">
+						<img src="assets/google.png" class="google-btn-logo" />
+						Sign in with Google
+					</button>
+				</div>
+
+				<div class="auth-fields-and-buttons">
+					<!--<input
+						id="name-input"
+						type="name"
+						placeholder="First Name"
+						required
+					/>-->
+					<input id="email-input" type="email" placeholder="Email" required />
+					<input
+						id="password-input"
+						type="password"
+						placeholder="Password"
+						required
+					/>
+
+					<button id="sign-in-btn" class="primary-btn">Sign in</button>
+					<button id="create-account-btn" class="secondary-btn">
+						Create Account
+					</button>
+				</div>
+			</div>
+		</section>
+
+		<section id="logged-in-view">
+			<div class="container">
+				<nav>
+					<button id="sign-out-btn" class="sign-out-btn">
+						<i
+							class="fa-solid fa-arrow-right-from-bracket sign-out-img"
+							style="color: #000000"
+						></i>
+						<small>SIGN OUT</small>
+					</button>
+				</nav>
+				<div class="app-container">
+					<div class="user-section">
+						<img id="user-profile-picture" />
+						<h2 id="user-greeting"></h2>
+					</div>
+
+					<div class="mood-icons">
+						<button id="mood-1" class="mood-icon-btn">
+							<img src="assets/1.png" alt="sad face emoji" />
+							Sad
+						</button>
+						<button id="mood-2" class="mood-icon-btn">
+							<img src="assets/2.png" alt="disappointed face emoji" />
+							Disappointed
+						</button>
+						<button id="mood-3" class="mood-icon-btn">
+							<img src="assets/3.png" alt="annoyed face emoji" />
+							Annoyed
+						</button>
+						<button id="mood-4" class="mood-icon-btn">
+							<img src="assets/4.png" alt="faceless emoji" />
+							Meh
+						</button>
+						<button id="mood-5" class="mood-icon-btn">
+							<img src="assets/5.png" alt="smiling face emoji" />
+							Good
+						</button>
+						<button id="mood-6" class="mood-icon-btn">
+							<img src="assets/6.png" alt="hugging face emoji" />
+							Amazing
+						</button>
+					</div>
+
+					<div class="post-section">
+						<textarea
+							id="post-input"
+							placeholder="Let out your feelings..."
+						></textarea>
+						<button type="button" id="post-btn" class="primary-btn" disabled>
+							Post
+						</button>
+						<button type="button" id="fetch-posts-btn" class="secondary-btn">
+							Fetch posts
+						</button>
+					</div>
+
+					<div class="posts-section" id="posts"></div>
+					<!--
+					<input
+					id="display-name-input"
+					type="text"
+					placeholder="Display Name"
+					/>
+					
+					<input
+					id="photo-url-input"
+					type="text"
+					placeholder="Profile Photo URL"
+					/>
+				<input
+					type="file"
+						id="profile-pic-file"
+						accept="image/png, image/jpeg, image/jpg"
+					/>
+
+					<button id="update-profile-btn" class="primary-btn">
+						Update profile
+					</button>
+					-->
+				</div>
+			</div>
+		</section>
+
+		<script src="app.js" type="module"></script>
+	</body>
+</html>
+
+<!--
+	icon credits <a href="https://www.flaticon.com/free-icons/disappointed" title="disappointed icons">Disappointed icons created by bukeicon - Flaticon</a>
+-->
