@@ -29,9 +29,9 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
 /* ELEMENTS */
 const viewLoggedOut = document.getElementById("logged-out-view");
@@ -88,15 +88,11 @@ let moodState = 0;
 //  checks if user is logged in/logged out
 onAuthStateChanged(auth, (user) => {
 	if (user) {
-		postButton.removeAttribute("disabled");
 		showLoggedInView();
 		showProfilePic(userProfilePicture, user);
 		showUserGreeting(userGreeting, user);
-		console.log("user is authenticated:", user);
 	} else {
-		postButton.setAttribute("disabled", true);
 		showLoggedOutView();
-		console.log("user is not authenticated");
 	}
 });
 
@@ -182,7 +178,7 @@ async function addPostToDB(postBody, user) {
 		});
 		console.log("Document written with ID: ", docRef.id);
 	} catch (error) {
-		console.error(error.message);
+		console.error("Error adding post to DB:", error);
 	}
 }
 
@@ -228,9 +224,7 @@ function postButtonClicked() {
 		clearInputField(textarea);
 		resetAllMoods(moodIcons);
 	} else {
-		console.error(
-			"Either user is not authenticated, or postBody/moodState is missing"
-		);
+		console.error("Invalid mood state or post body");
 	}
 }
 
@@ -324,10 +318,14 @@ function displayDate(firebaseDate) {
 function selectMood(event) {
 	const selectedMoodEmojiID = event.currentTarget.id;
 	console.log("Selected mood id:", selectedMoodEmojiID);
+
 	moodChangeAfterSelection(selectedMoodEmojiID, moodIcons);
+
 	const chosenMood = returnMoodValue(selectedMoodEmojiID);
+	console.log("Chosen mood:", chosenMood);
 
 	moodState = chosenMood;
+	console.log("moodState set to:", moodState);
 }
 
 function moodChangeAfterSelection(selectedMoodEmojiID, allMoods) {
@@ -352,5 +350,5 @@ function resetAllMoods(allMoods) {
 }
 
 function returnMoodValue(elementID) {
-	return Number(elementID.slice(6));
+	return Number(elementID.slice(5));
 }
